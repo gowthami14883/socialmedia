@@ -1,84 +1,40 @@
-import { useState } from "react";
+import "./Register.css";
+import { Link } from "react-router-dom";
 
 function Register() {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    gender: "",
-    dob: "",
-    terms: false
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-  };
-
   return (
-    <div>
-      <h1>Register</h1>
+    <div className="register-container">
+      <form className="register-form">
+        <h2>Register</h2>
 
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          onChange={handleChange}
-        />
+        <input type="text" placeholder="Username" />
+        <input type="email" placeholder="Email" />
+        <input type="password" placeholder="Password" />
 
-        <br /><br />
+        <input type="date" />
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-        />
+        <div className="gender-group">
+          <label>
+            <input type="radio" name="gender" value="male" /> Male
+          </label>
+          <label>
+            <input type="radio" name="gender" value="female" />Female
+          </label>
+          <label>
+            <input type="radio" name="gender" value="other" />Other
+          </label>
+        </div>
 
-        <br /><br />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-        />
-
-        <br /><br />
-
-        <label>Gender:</label>
-        <br />
-        <input type="radio" name="gender" value="male" onChange={handleChange} /> Male
-        <input type="radio" name="gender" value="female" onChange={handleChange} /> Female
-        <input type="radio" name="gender" value="other" onChange={handleChange} /> Other
-
-        <br /><br />
-
-        <label>Date of Birth:</label>
-        <br />
-        <input type="date" name="dob" onChange={handleChange} />
-
-        <br /><br />
-
-        <input
-          type="checkbox"
-          name="terms"
-          onChange={handleChange}
-        /> Accept Terms & Conditions
-
-        <br /><br />
+        <div className="terms">
+          <input type="checkbox" id="terms" />
+          <label htmlFor="terms">I agree to Terms & Conditions</label>
+        </div>
 
         <button type="submit">Register</button>
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
       </form>
     </div>
   );
