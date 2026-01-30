@@ -1,45 +1,35 @@
-import { useEffect, useState } from "react";
-import api from "../../api/axios";
-import { API_ENDPOINTS } from "../../api/config";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 
 function Dashboard() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await api.get(API_ENDPOINTS.PROFILE);
-        console.log("fetchUser res", res.data.data);
-        setUser(res.data.data); // adjust based on your API response
-      } catch (error) {
-        console.error("User not logged in", error);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  if (loading) return <h2 style={{ padding: "20px" }}>Loading...</h2>;
+    const token = localStorage.getItem("token");
+    // if (token) {
+    //   navigate("/dashboard"); // redirect if already logged in
+    // }
+  }, [navigate]);
 
   return (
-    <div style={{ padding: "20px", background: "lightgreen" }}>
-      {user ? (
-        <>
-          <h1>Dashboard</h1>
-          <p>Welcome, {user.username}</p>
-          <p>Email: {user.email}</p>
-          <p>Gender: {user.gender}</p>
-          <p>bio: {user.bio}</p>
-          <p>phone: {user.phone}</p>
-          <p>dateofbirth: {user.dateofbirth}</p>
-        </>
-      ) : (
-        <p>Please login to see your dashboard.</p>
-      )}
+    <div style={{ padding: "20px" }}>
+      <h1>DASHBOARD</h1>
+      <p>YOU ARE SUCCESSFULLY LOGGED IN</p>
+      <div style={{ marginTop: "20px" }}>
+        <Link to="/profile" style={{ marginRight: "15px", background: "orange" }}>
+          Profile
+        </Link>
+        <Link to="/chat" style={{ marginRight: "15px", background: "lightpink" }}>
+          chat
+        </Link>
+        <Link to="/allposts" style={{ marginRight: "15px", background: "lightpink" }}>
+          allposts
+        </Link>
+      </div>
+      <br></br>
+      <button type ="submit" style={{background: "blue"}}>logout</button>
     </div>
   );
 }
