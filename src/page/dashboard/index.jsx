@@ -1,35 +1,57 @@
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-
+import "./dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    // if (token) {
-    //   navigate("/dashboard"); // redirect if already logged in
-    // }
+    if (!token) {
+      navigate("/login");
+    }
   }, [navigate]);
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>DASHBOARD</h1>
-      <p>YOU ARE SUCCESSFULLY LOGGED IN</p>
-      <div style={{ marginTop: "20px" }}>
-        <Link to="/profile" style={{ marginRight: "15px", background: "orange" }}>
-          Profile
-        </Link>
-        <Link to="/chat" style={{ marginRight: "15px", background: "lightpink" }}>
-          chat
-        </Link>
-        <Link to="/allposts" style={{ marginRight: "15px", background: "lightpink" }}>
-          allposts
-        </Link>
+    <div className="insta-layout">
+      {/* LEFT SIDEBAR */}
+      <div className="insta-sidebar">
+        <h2 className="insta-logo">Instagram</h2>
+
+        <button><Link to="/profile" className="insta-link">
+          👤 <span>Profile</span>
+        </Link></button><br></br>
+
+        <button><Link to="/posts" className="insta-link">
+          🏠 <span>Posts</span>
+        </Link></button><br></br>
+
+        <button><Link to="/chat" className="insta-link">
+          💬 <span>Chat</span>
+        </Link></button><br></br>
+
+        <button className="logout-btn"onClick={handleLogout}>
+           Logout
+        </button>
+
       </div>
-      <br></br>
-      <button type ="submit" style={{background: "blue"}}>logout</button>
+
+      {/* RIGHT CONTENT */}
+      <div className="insta-content">
+        <h1><b>Dashboard</b></h1>
+        <img src="src\assests\dashboard\visaka.png"></img>
+        <img src="src/assests/dashboard/atumlife.jpg"></img>
+        <div style={{gap:"5px"}}></div>
+        <img src="src/assests/dashboard/atumobile.jpg"></img>
+        <img src="src/assests/dashboard/insta.jpg"></img>
+        <div style={{gap:"5px"}}></div>
+ 
+      </div>
     </div>
   );
 }

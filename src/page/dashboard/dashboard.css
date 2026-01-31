@@ -1,0 +1,56 @@
+.insta-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  text-align: center;
+  background-color:lightpink;
+}
+
+.insta-sidebar {
+  width: 250px;
+  border-right: 2px solid #3527af;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background:rgb(185, 173, 230);
+
+}
+
+.insta-logo {
+  font-family: cursive;
+  margin-bottom: 30px;
+}
+
+.insta-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  text-decoration: none;
+  color: black;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  
+}
+
+.insta-link:hover {
+  cursor: pointer;;
+}
+
+.logout-btn {
+  margin-top: auto;
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.insta-content {
+  flex: 1;
+  padding: 40px;
+  gap:5px;
+  height: 100vh;
+  width :100vh;
+
+}
