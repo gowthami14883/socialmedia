@@ -10,7 +10,9 @@ function Register() {
   const navigate = useNavigate();
   const [apiError, setApiError] = useState("");
 
+  // -----------------------------
   // Yup validation schema
+  // -----------------------------
   const validationSchema = Yup.object({
     username: Yup.string()
       .min(3, "Username must be at least 3 characters")
@@ -28,11 +30,15 @@ function Register() {
 
     gender: Yup.string().required("Gender is required"),
 
-    terms: Yup.boolean()
-      .oneOf([true], "You must accept the terms & conditions"),
+    terms: Yup.boolean().oneOf(
+      [true],
+      "You must accept the terms & conditions"
+    ),
   });
 
+  // -----------------------------
   // Formik setup
+  // -----------------------------
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -48,16 +54,21 @@ function Register() {
       try {
         setApiError("");
 
+        // ✅ FIX 1: Convert date format
+        // HTML date input gives YYYY-MM-DD
+        // Backend expects YYYY/MM/DD
+        const formattedDob = values.dob.replace(/-/g, "/");
+
         const payload = {
           username: values.username,
           email: values.email,
           password: values.password,
-          dateofbirth: values.dob,
+          dateofbirth: formattedDob, // ✅ backend field name
           gender: values.gender,
         };
 
         await api.post(API_ENDPOINTS.REGISTER, payload);
-
+        alert("Registration successful! Please login.");
         navigate("/login");
       } catch (error) {
         const backendErrors = error.response?.data?.data;
@@ -65,9 +76,14 @@ function Register() {
         if (Array.isArray(backendErrors)) {
           backendErrors.forEach((err) => {
             if (err.path && err.msg) {
-              setFieldError(err.path, err.msg);
+              // ✅ FIX 2: map backend field to formik field
+              if (err.path === "dateofbirth") {
+                setFieldError("dob", err.msg);
+              } else {
+                setFieldError(err.path, err.msg);
+              }
 
-              // ✅ POPUP alert for already registered errors
+              // ✅ Popup for already registered user
               if (err.msg.toLowerCase().includes("already registered")) {
                 alert(err.msg);
               }

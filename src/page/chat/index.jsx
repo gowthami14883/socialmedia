@@ -1,9 +1,5 @@
-
-
-function Chat(){
-    return(
-        <p>not done yet</p>
-    );
+function Chat() {
+  return <h1>Chat Page</h1>;
 }
 
-export default Chat; 
+export default Chat;
