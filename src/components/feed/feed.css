@@ -1,0 +1,44 @@
+.ig-feed {
+  max-width: 470px;
+  margin: auto;
+}
+
+.ig-post {
+  border: 1px solid #dbdbdb;
+  background: white;
+  margin-bottom: 20px;
+}
+
+.ig-post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+}
+
+.ig-avatar {
+  width: 35px;
+  height: 35px;
+  background: #ccc;
+  border-radius: 50%;
+}
+
+.ig-media {
+  width: 100%;
+  max-height: 600px;
+  object-fit: cover;
+}
+
+.ig-actions {
+  padding: 8px 10px;
+  font-size: 20px;
+}
+
+.ig-likes {
+  padding: 0 10px;
+  font-weight: 600;
+}
+
+.ig-caption {
+  padding: 5px 10px 10px;
+}

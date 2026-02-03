@@ -15,7 +15,9 @@
   background:rgb(185, 173, 230);
   gap:20px;
   button{
-    background-color: aqua;
+    background-color: black;
+    height: 200px;
+    border-radius: 0cap;        
   }
 
 }
@@ -42,12 +44,12 @@
 }
 
 .logout-btn {
-  margin-top: auto;
   background: none;
   border: none;
   color: red;
   cursor: pointer;
   font-size: 16px;
+
 }
 
 .insta-content {

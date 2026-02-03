@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Profile from "../profile";
 import Chat from "../chat";
+import Feed from "../../components/feed";
 import api from "../../api/axios";
 import { API_ENDPOINTS, API_BASE_URL } from "../../api/config";
 import "./dashboard.css";
@@ -72,6 +73,7 @@ function Dashboard() {
         <h2 className="insta-logo">Instagram</h2>
 
         <button onClick={() => setActivePopup("profile")}>👤 Profile</button>
+        <button onClick={() => setActivePopup("feed")}>🏠 Feed</button>
         <button onClick={() => setActivePopup("posts")}>🏠 Posts</button>
         <button onClick={() => setActivePopup("chat")}>💬 Chat</button>
         <button className="logout-btn" onClick={handleLogout}>Logout</button>
@@ -94,6 +96,7 @@ function Dashboard() {
             <button className="close-btn-top" onClick={() => setActivePopup(null)}>✖</button>
 
             {activePopup === "profile" && <Profile />}
+            {activePopup === "feed" && <Feed />}
             {activePopup === "chat" && <Chat />}
 
             {/* POSTS FORM */}

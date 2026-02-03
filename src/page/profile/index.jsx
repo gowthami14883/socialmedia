@@ -83,7 +83,7 @@ function Profile() {
             {profile.Posts?.map((post) => (
               <div key={post.post_id} className="post-card">
                 <img
-                  src={`http://localhost:5000/${post.media_url}`}
+                  src={`http://localhost:3000/${post.media_url}`}
                   alt="post"
                 />
                 <p className="caption">{post.caption}</p>
