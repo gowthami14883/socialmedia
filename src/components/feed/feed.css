@@ -1,44 +1,108 @@
 .ig-feed {
-  max-width: 470px;
-  margin: auto;
+  max-width: 650px;   /* was 470px */
+  margin: 0 auto;
+  padding: 20px 0;
+  background: #fafafa;
 }
 
+/* Post */
 .ig-post {
+  background: #fff;
   border: 1px solid #dbdbdb;
-  background: white;
-  margin-bottom: 20px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  overflow: hidden;
 }
 
+/* Header */
 .ig-post-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px;
+  padding: 12px;
 }
 
 .ig-avatar {
-  width: 35px;
-  height: 35px;
-  background: #ccc;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-}
-
-.ig-media {
-  width: 100%;
-  max-height: 600px;
   object-fit: cover;
 }
 
-.ig-actions {
-  padding: 8px 10px;
-  font-size: 20px;
-}
-
-.ig-likes {
-  padding: 0 10px;
+.ig-username {
   font-weight: 600;
+  font-size: 14px;
 }
 
+/* Media */
+.ig-media {
+  width: 100%;
+  max-height: 460px;
+  object-fit: cover;
+}
+
+/* Actions */
+.ig-actions {
+  padding: 10px 12px;
+  font-size: 22px;
+  display: flex;
+  gap: 14px;
+}
+
+/* Like Button */
+.like-btn {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.like-btn:active {
+  transform: scale(1.25);
+}
+
+.like-btn.liked {
+  color: red;
+}
+
+/* Likes */
+.ig-likes {
+  padding: 0 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Caption */
 .ig-caption {
-  padding: 5px 10px 10px;
+  padding: 6px 12px 12px;
+  font-size: 14px;
+}
+
+
+.ig-comments {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.ig-comment {
+  margin-bottom: 4px;
+}
+
+.ig-add-comment {
+  display: flex;
+  border-top: 1px solid #eee;
+  padding: 6px;
+}
+
+.ig-add-comment input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.ig-add-comment button {
+  background: none;
+  border: none;
+  color: #0095f6;
+  font-weight: bold;
+  cursor: pointer;
 }

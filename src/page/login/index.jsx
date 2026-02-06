@@ -10,38 +10,40 @@ function Login() {
   const navigate = useNavigate();
   const [apiError, setApiError] = useState("");
 
-  // Yup validation schema
   const validationSchema = Yup.object({
-    email: Yup.string()
-      .email("Invalid email address")
-      .required("Email is required"),
-    password: Yup.string()
-      .min(6, "Password must be at least 6 characters")
-      .required("Password is required"),
+    email: Yup.string().email("Invalid email").required("Email required"),
+    password: Yup.string().required("Password required"),
   });
 
-  // Formik setup
   const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
+    initialValues: { email: "", password: "" },
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
-      console.log('onSubmit ',values)
       try {
         setApiError("");
-        console.log('API_ENDPOINTS.LOGIN ',API_ENDPOINTS.LOGIN)
-        const response = await api.post(API_ENDPOINTS.LOGIN, values);
-        console.log('response ',response)
 
-        // Store token
-        localStorage.setItem("token", response.data.data.token);
+        // 🔹 1. LOGIN
+        const loginRes = await api.post(API_ENDPOINTS.LOGIN, values);
 
+        const token = loginRes.data.data.token;
+
+        // 🔹 2. SAVE TOKEN
+        localStorage.setItem("token", token);
+
+        // 🔹 3. FETCH LOGGED-IN USER USING TOKEN
+        const meRes = await api.get("/api/users/me");
+
+        // 🔹 4. SAVE USER OBJECT
+        localStorage.setItem(
+          "user",
+          JSON.stringify(meRes.data.data)
+        );
+
+        // 🔹 5. GO TO DASHBOARD
         navigate("/dashboard");
       } catch (error) {
         setApiError(
-          error.response?.data?.message || "Invalid email or password"
+          error.response?.data?.message || "Login failed"
         );
       } finally {
         setSubmitting(false);
@@ -51,39 +53,27 @@ function Login() {
 
   return (
     <div className="login-container">
-      <form className="login-form" onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} className="login-form">
         <h2>Login</h2>
 
-        {/* Email */}
         <input
-          type="email"
           name="email"
           placeholder="Email"
           value={formik.values.email}
           onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
         />
-        {formik.touched.email && formik.errors.email && (
-          <span className="error">{formik.errors.email}</span>
-        )}
 
-        {/* Password */}
         <input
-          type="password"
           name="password"
+          type="password"
           placeholder="Password"
           value={formik.values.password}
           onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
         />
-        {formik.touched.password && formik.errors.password && (
-          <span className="error">{formik.errors.password}</span>
-        )}
 
-        {/* API Error */}
         {apiError && <div className="api-error">{apiError}</div>}
 
-        <button type="submit" disabled={formik.isSubmitting}>
+        <button type="submit">
           {formik.isSubmitting ? "Logging in..." : "Login"}
         </button>
 

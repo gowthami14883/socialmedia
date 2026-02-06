@@ -1,11 +1,12 @@
 .profile-wrapper {
   width: 100%;
-  min-height: 100vh;
-  background: #fafafa;
+  height: 100vh;          /* full screen */
+  overflow-y: auto;      /* scroll happens here */
+  background: #ffffff;   /* white stays during scroll */
   padding: 40px;
   font-family: Arial, sans-serif;
+  box-sizing: border-box;
 }
-
 .profile-header {
   display: flex;
   align-items: center;
@@ -194,11 +195,11 @@ POSTS SECTION
 }
 
 .modal-close {
-  background: none;
+  background: black;
   border: none;
   font-size: 18px;
   cursor: pointer;
-  color: #555;
+  color: #da1919;
 }
 
 .modal-close:hover {

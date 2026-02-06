@@ -43,7 +43,6 @@ button {
   font-size: 15px;
   border-radius: 6px;
   cursor: pointer;
-  gap: 40px;
 }
 
 .operator {
@@ -66,3 +65,7 @@ button {
   color: black;
 }
 
+
+html, body, #root {
+  height: 100%;
+}

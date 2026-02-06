@@ -1,46 +1,132 @@
-.chat-container {
-  width: 350px;
+/* WRAPPER */
+.ig-chat-wrapper {
+  display: flex;
+  height: 100%;
+  background: #fff;
+  height: 100%;
+  background: #ffffff;   /* 👈 THIS HIDES THE PINK */
+
+}
+
+/* USERS LIST */
+.ig-users {
+  width: 260px;
+  border-right: 1px solid #dbdbdb;
+  padding: 12px;
+}
+
+.ig-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ig-user img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.ig-user.active,
+.ig-user:hover {
+  background: #f5f5f5;
+}
+
+/* CHAT AREA */
+.ig-chat {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
-.chat-messages {
-  flex: 1;
-  border: 1px solid #ddd;
-  padding: 10px;
-  overflow-y: auto;
-  margin-bottom: 10px;
-}
-
-.chat-message {
-  padding: 6px 10px;
-  margin-bottom: 6px;
-  border-radius: 10px;
-  max-width: 70%;
-}
-
-.chat-message.sent {
-  background: #dcf8c6;
-  align-self: flex-end;
-}
-
-.chat-input {
+/* HEADER */
+.ig-header {
   display: flex;
-  gap: 5px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-bottom: 1px solid #dbdbdb;
+  font-weight: 500;
 }
 
-.chat-input input {
+.ig-header img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+/* MESSAGES */
+.ig-messages {
   flex: 1;
-  padding: 6px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 16px;
+  overflow-y: auto;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.chat-input button {
-  padding: 6px 12px;
+/* COMMON MESSAGE */
+.ig-message {
+  max-width: 60%;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 18px;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+
+/* ✅ INSTAGRAM SENDER */
+.ig-sent {
+  align-self: flex-end;
+  background: #3797f0;     /* Instagram blue */
+  color: #fff;
+  border-bottom-right-radius: 4px;
+  margin-left: auto;
+}
+
+
+/* ✅ INSTAGRAM RECEIVER */
+.ig-received {
+  align-self: flex-start;
+  background: #f0f0f0;     /* Instagram light gray */
+  color: #000;
+  border-bottom-left-radius: 4px;
+  margin-right: auto;
+}
+
+
+/* INPUT */
+.ig-input {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-top: 1px solid #dbdbdb;
+}
+
+.ig-input input {
+  flex: 1;
+  border-radius: 20px;
+  border: 1px solid #dbdbdb;
+  padding: 8px 14px;
+  outline: none;
+}
+
+.ig-input button {
   border: none;
-  background: #3897f0;
-  color: white;
-  border-radius: 5px;
+  background: transparent;
+  color: #0095f6;
+  font-weight: 600;
   cursor: pointer;
+}
+
+/* EMPTY */
+.ig-empty {
+  margin: auto;
+  color: gray;
 }

@@ -1,213 +1,146 @@
+import { useEffect, useState } from "react";
 import "./feed.css";
 
-const posts = [
-  {
-    id: 1,
-    user: "gowthami",
-    type: "image",
-    media: "src/assests/dashboard/visaka.png",
-    caption: "Chasing good vibes ✨",
-    likes: 234
-  },
-  {
-    id: 2,
-    user: "wanderlust_diaries",
-    type: "video",
-    media: "src/assests/videos/video1.mp4",
-    caption: "Travel diaries 🌍",
-    likes: 1200
-  },
-  {
-    id: 3,
-    user: "foodie_corner",
-    type: "image",
-    media: "src/assests/dashboard/atumlife.jpg",
-    caption: "Food is love ❤️",
-    likes: 890
-  },
-  {
-    id: 4,
-    user: "fitness_freak",
-    type: "video",
-    media: "src/assests/videos/workout.mp4",
-    caption: "No excuses 💪",
-    likes: 2100
-  },
-  {
-    id: 5,
-    user: "music_vibes",
-    type: "image",
-    media: "src/assests/dashboard/insta.jpg",
-    caption: "Late night mood 🎧",
-    likes: 640
-  },
-  {
-    id: 6,
-    user: "tech_world",
-    type: "image",
-    media: "src/assests/dashboard/atumobile.jpg",
-    caption: "Tech that matters 🚀",
-    likes: 780
-  },
-  {
-    id: 7,
-    user: "nature_lover",
-    type: "image",
-    media: "src/assests/dashboard/atumlife.jpg",
-    caption: "Peaceful mornings 🍃",
-    likes: 530
-  },
-  {
-    id: 8,
-    user: "daily_vlogs",
-    type: "video",
-    media: "src/assests/videos/music.mp4",
-    caption: "A day in my life 🎥",
-    likes: 1500
-  },
-  {
-    id: 9,
-    user: "art_studio",
-    type: "image",
-    media: "src/assests/dashboard/visaka.png",
-    caption: "Creativity everywhere 🎨",
-    likes: 410
-  },
-  {
-    id: 10,
-    user: "street_photography",
-    type: "image",
-    media: "src/assests/dashboard/insta.jpg",
-    caption: "Urban stories 📸",
-    likes: 980
-  },
-  {
-    id: 11,
-    user: "startup_life",
-    type: "video",
-    media: "src/assests/videos/video1.mp4",
-    caption: "Building in public 💻",
-    likes: 860
-  },
-  {
-    id: 12,
-    user: "selfcare_club",
-    type: "image",
-    media: "src/assests/dashboard/atumobile.jpg",
-    caption: "Slow days are good days 🌸",
-    likes: 720
-  },
-  {
-  id: 13,
-  user: "sunset_seekers",
-  type: "image",
-  media: "src/assests/dashboard/insta.jpg",
-  caption: "Golden hour magic 🌅",
-  likes: 1340
-},
-{
-  id: 14,
-  user: "coding_life",
-  type: "video",
-  media: "src/assests/videos/video1.mp4",
-  caption: "Debugging at 2 AM 😴💻",
-  likes: 920
-},
-{
-  id: 15,
-  user: "yoga_daily",
-  type: "image",
-  media: "src/assests/dashboard/atumlife.jpg",
-  caption: "Breathe in, breathe out 🧘‍♀️",
-  likes: 680
-},
-{
-  id: 16,
-  user: "road_trip_vibes",
-  type: "video",
-  media: "src/assests/videos/music.mp4",
-  caption: "Windows down, music up 🚘🎶",
-  likes: 1750
-},
-{
-  id: 17,
-  user: "bookish_world",
-  type: "image",
-  media: "src/assests/dashboard/visaka.png",
-  caption: "Currently reading 📖✨",
-  likes: 540
-},
-{
-  id: 18,
-  user: "home_garden",
-  type: "image",
-  media: "src/assests/dashboard/atumobile.jpg",
-  caption: "Growing happiness 🌱",
-  likes: 460
-},
-{
-  id: 19,
-  user: "reel_creator",
-  type: "video",
-  media: "src/assests/videos/workout.mp4",
-  caption: "Reels all day 🎬🔥",
-  likes: 2400
-},
-{
-  id: 20,
-  user: "fashion_diary",
-  type: "image",
-  media: "src/assests/dashboard/insta.jpg",
-  caption: "Today’s outfit 🖤",
-  likes: 1120
-},
-{
-  id: 21,
-  user: "coffee_addict",
-  type: "image",
-  media: "src/assests/dashboard/atumlife.jpg",
-  caption: "But first, coffee ☕",
-  likes: 890
-},
-{
-  id: 22,
-  user: "mindfulness_space",
-  type: "video",
-  media: "src/assests/videos/video1.mp4",
-  caption: "Slow down and relax 🌿",
-  likes: 770
-}
-
-];
-
-
 function Feed() {
+  const [posts, setPosts] = useState([]);
+  const [commentText, setCommentText] = useState({});
+
+  useEffect(() => {
+    const staticPosts = [
+      {
+        id: 1,
+        user: "girl",
+        avatar: "https://i.pravatar.cc/150?img=47",
+        type: "image",
+        media: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900",
+        caption: "Chasing good vibes ✨",
+        likes: 234,
+        liked: false,
+        comments: []
+      },
+      {
+        id: 2,
+        user: "anime_girl",
+        avatar: "https://i.pravatar.cc/150?img=32",
+        type: "image",
+        media: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900",
+        caption: "Cartoon vibes 💕",
+        likes: 980,
+        liked: false,
+        comments: []
+      },
+      {
+        id: 3,
+        user: "soft_style",
+        avatar: "https://i.pravatar.cc/150?img=15",
+        type: "image",
+        media: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900",
+        caption: "Soft & stylish 🌸",
+        likes: 1200,
+        liked: false,
+        comments: []
+      },
+      {
+        id: 4,
+        user: "fashion_daily",
+        avatar: "https://i.pravatar.cc/150?img=5",
+        type: "image",
+        media: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900",
+        caption: "Outfit goals 🖤",
+        likes: 860,
+        liked: false,
+        comments: []
+      },
+      {
+        id: 5,
+        user: "reel_creator",
+        avatar: "https://i.pravatar.cc/150?img=68",
+        type: "video",
+        media: "https://www.w3schools.com/html/mov_bbb.mp4",
+        caption: "Reels all day 🎬🔥",
+        likes: 2400,
+        liked: false,
+        comments: []
+      }
+    ];
+
+    setTimeout(() => {
+      setPosts(staticPosts);
+    }, 400);
+  }, []);
+
+  const handleLike = (id) => {
+    setPosts((prev) =>
+      prev.map((post) =>
+        post.id === id
+          ? {
+              ...post,
+              liked: !post.liked,
+              likes: post.liked ? post.likes - 1 : post.likes + 1
+            }
+          : post
+      )
+    );
+  };
+
+  const handleCommentChange = (id, value) => {
+    setCommentText((prev) => ({
+      ...prev,
+      [id]: value
+    }));
+  };
+
+  const handleAddComment = (id) => {
+    if (!commentText[id]?.trim()) return;
+
+    setPosts((prev) =>
+      prev.map((post) =>
+        post.id === id
+          ? {
+              ...post,
+              comments: [
+                ...post.comments,
+                { user: "you", text: commentText[id] }
+              ]
+            }
+          : post
+      )
+    );
+
+    setCommentText((prev) => ({
+      ...prev,
+      [id]: ""
+    }));
+  };
+
   return (
     <div className="ig-feed">
       {posts.map((post) => (
         <div className="ig-post" key={post.id}>
+          
           {/* Header */}
           <div className="ig-post-header">
-            <div className="ig-avatar"></div>
-            <b>{post.user}</b>
+            <img src={post.avatar} className="ig-avatar" alt={post.user} />
+            <span className="ig-username">{post.user}</span>
           </div>
 
           {/* Media */}
           {post.type === "image" ? (
-            <img src={post.media} className="ig-media" />
+            <img src={post.media} className="ig-media" alt="" />
           ) : (
-            <video
-              src={post.media}
-              className="ig-media"
-              controls
-              muted
-              loop
-            />
+            <video src={post.media} className="ig-media" controls muted loop />
           )}
 
           {/* Actions */}
           <div className="ig-actions">
-            ❤️ 💬 📤
+            <span
+              className={`like-btn ${post.liked ? "liked" : ""}`}
+              onClick={() => handleLike(post.id)}
+            >
+              {post.liked ? "❤️" : "🤍"}
+            </span>
+            <span>💬</span>
+            <span>📤</span>
           </div>
 
           {/* Likes */}
@@ -217,6 +150,31 @@ function Feed() {
           <div className="ig-caption">
             <b>{post.user}</b> {post.caption}
           </div>
+
+          {/* Comments */}
+          <div className="ig-comments">
+            {post.comments.map((c, i) => (
+              <div key={i} className="ig-comment">
+                <b>{c.user}</b> {c.text}
+              </div>
+            ))}
+          </div>
+
+          {/* Add Comment */}
+          <div className="ig-add-comment">
+            <input
+              type="text"
+              placeholder="Add a comment..."
+              value={commentText[post.id] || ""}
+              onChange={(e) =>
+                handleCommentChange(post.id, e.target.value)
+              }
+            />
+            <button onClick={() => handleAddComment(post.id)}>
+              Post
+            </button>
+          </div>
+
         </div>
       ))}
     </div>

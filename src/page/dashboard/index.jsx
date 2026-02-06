@@ -4,27 +4,37 @@ import Profile from "../profile";
 import Chat from "../chat";
 import Feed from "../../components/feed";
 import api from "../../api/axios";
-import { API_ENDPOINTS, API_BASE_URL } from "../../api/config";
+import { API_ENDPOINTS } from "../../api/config";
 import "./dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
-  const [activePopup, setActivePopup] = useState(null); 
+
+  // 🔥 Controls dashboard content
+  const [currentView, setCurrentView] = useState("feed");
+
+  // 🔥 Popup ONLY for posts
+  const [activePopup, setActivePopup] = useState(null);
+
   const [caption, setCaption] = useState("");
   const [mediaFile, setMediaFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-    }
-  }, [navigate]);
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+
+  if (!token || !user) {
+    localStorage.clear();
+    navigate("/login");
+  }
+}, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  navigate("/login");
+};
 
   const handleFileChange = (e) => {
     setMediaFile(e.target.files[0]);
@@ -34,7 +44,7 @@ function Dashboard() {
     e.preventDefault();
 
     if (!mediaFile) {
-      alert("Please select a file to upload");
+      alert("Please select a file");
       return;
     }
 
@@ -44,26 +54,16 @@ function Dashboard() {
 
     try {
       setUploading(true);
-      await api.post(API_ENDPOINTS.POSTS, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      alert("Post uploaded successfully!");
+      await api.post(API_ENDPOINTS.POSTS, formData);
+      alert("Post uploaded!");
       setCaption("");
       setMediaFile(null);
-      setActivePopup(null); // close popup after posting
-    } catch (error) {
-      console.error("Upload error:", error);
-      alert("Failed to upload post");
+      setActivePopup(null);
+    } catch (err) {
+      alert("Upload failed");
     } finally {
       setUploading(false);
     }
-  };
-
-  const handleCancel = () => {
-    // reset caption and file
-    setCaption("");
-    setMediaFile(null);
   };
 
   return (
@@ -72,69 +72,75 @@ function Dashboard() {
       <div className="insta-sidebar">
         <h2 className="insta-logo">Instagram</h2>
 
-        <button onClick={() => setActivePopup("profile")}>👤 Profile</button>
-        <button onClick={() => setActivePopup("feed")}>🏠 Feed</button>
-        <button onClick={() => setActivePopup("posts")}>🏠 Posts</button>
-        <button onClick={() => setActivePopup("chat")}>💬 Chat</button>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+        {/* DASHBOARD VIEWS */}
+        <button onClick={() => setCurrentView("feed")}>🏠 Feed</button>
+        <button onClick={() => setCurrentView("profile")}>👤 Profile</button>
+        <button onClick={() => setCurrentView("chat")}>💬 Chat</button>
+
+        {/* POPUP ACTION */}
+        <button onClick={() => setActivePopup("posts")}>➕ Posts</button>
+
+        <button className="logout-btn" onClick={handleLogout}>
+          Logout
+        </button>
       </div>
 
-      {/* RIGHT CONTENT */}
+      {/* RIGHT CONTENT — FEED / PROFILE / CHAT */}
       <div className="insta-content">
-        <h1><b>Dashboard</b></h1>
-        <img src="src/assests/dashboard/visaka.png" />
-        <img src="src/assests/dashboard/atumlife.jpg" />
-        <img src="src/assests/dashboard/atumobile.jpg" />
-        <img src="src/assests/dashboard/insta.jpg" />
+        {currentView === "feed" && <Feed />}
+        {currentView === "profile" && <Profile />}
+        {currentView === "chat" && <Chat />}
       </div>
 
-      {/* POPUP MODAL */}
-      {activePopup && (
+      {/* POPUP — ONLY POSTS */}
+      {activePopup === "posts" && (
         <div className="popup-overlay">
           <div className="popup-box">
-            {/* Small cross to close popup */}
-            <button className="close-btn-top" onClick={() => setActivePopup(null)}>✖</button>
+            <button
+              className="close-btn-top"
+              onClick={() => setActivePopup(null)}
+            >
+              ✖
+            </button>
 
-            {activePopup === "profile" && <Profile />}
-            {activePopup === "feed" && <Feed />}
-            {activePopup === "chat" && <Chat />}
+            <div className="posts-popup">
+              <h3>Upload Post</h3>
 
-            {/* POSTS FORM */}
-            {activePopup === "posts" && (
-              <div className="posts-popup">
-                <h3>Upload Post</h3>
-                <form onSubmit={handlePostSubmit}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Caption"
-                    value={caption}
-                    onChange={(e) => setCaption(e.target.value)}
-                  />
-                  <div className="posts-btns">
-                    <button type="submit" disabled={uploading}>
-                      {uploading ? "Uploading..." : "Post"}
-                    </button>
-                    <button type="button" onClick={handleCancel}>Cancel</button>
-                  </div>
-                </form>
+              <form onSubmit={handlePostSubmit}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
 
-                {mediaFile && (
-                  <div className="preview">
-                    <p>Preview:</p>
-                    <img
-                      src={URL.createObjectURL(mediaFile)}
-                      alt="preview"
-                      className="preview-img"
-                    />
-                  </div>
-                )}
-              </div>
-            )}
+                <input
+                  type="text"
+                  placeholder="Caption"
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
+                />
+
+                <div className="posts-btns">
+                  <button type="submit" disabled={uploading}>
+                    {uploading ? "Uploading..." : "Post"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActivePopup(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+
+              {mediaFile && (
+                <img
+                  src={URL.createObjectURL(mediaFile)}
+                  alt="preview"
+                  className="preview-img"
+                />
+              )}
+            </div>
           </div>
         </div>
       )}

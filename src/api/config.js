@@ -5,5 +5,5 @@ export const API_ENDPOINTS = {
   REGISTER: `${API_BASE_URL}/api/users/register`,
   PROFILE: `${API_BASE_URL}/api/users/me`,
   POSTS:  `${API_BASE_URL}/api/posts`,
-  CHATS:  `${API_BASE_URL}/api/chats/10`
+  CHATS:  `${API_BASE_URL}/api/chats`
 };

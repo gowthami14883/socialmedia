@@ -1,76 +1,153 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "../../api/axios";
 import "./chat.css";
 
 function Chat() {
-  // TEMP: receiver user id (later you can make this dynamic)
-  const receiverId = 3; // example: chatting with user id 3
+  // ✅ 100% SAFE localStorage read
+  const storedUser = localStorage.getItem("user");
 
+  let parsedUser = null;
+  try {
+    parsedUser =
+      storedUser && storedUser !== "undefined"
+        ? JSON.parse(storedUser)
+        : null;
+  } catch (err) {
+    console.error("Invalid user in localStorage", err);
+    parsedUser = null;
+  }
+
+  const loggedInUserId = parsedUser?.user_id ?? null;
+
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  // Fetch chats
-  const fetchChats = async () => {
+  const messagesEndRef = useRef(null);
+
+  // 🚫 Block chat if not logged in
+  if (!loggedInUserId) {
+    return (
+      <div className="ig-chat-wrapper">
+        <div className="ig-empty">
+          Please login to access chats
+        </div>
+      </div>
+    );
+  }
+
+  // -------- FETCH USERS --------
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
     try {
-      const res = await api.get(`/api/chats/${receiverId}`);
-      setMessages(res.data.data);
-    } catch (error) {
-      console.error("Failed to fetch chats", error);
+      const res = await api.get("/api/users");
+
+      setUsers(
+        (res.data?.data || []).filter(
+          (u) => u.user_id !== loggedInUserId
+        )
+      );
+    } catch (err) {
+      console.error("Failed to fetch users", err);
     }
   };
 
-  useEffect(() => {
-    fetchChats();
-  }, []);
+  // -------- FETCH CHATS --------
+  const fetchChats = async (userId) => {
+    try {
+      const res = await api.get(`/api/chats/${userId}`);
+      setMessages(res.data?.data || []);
+    } catch (err) {
+      console.error("Failed to fetch chats", err);
+    }
+  };
 
-  // Send message
+  // -------- SEND MESSAGE --------
   const handleSend = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !selectedUser) return;
 
     try {
-      setLoading(true);
-      await api.post(`/api/chats/${receiverId}`, {
-        message: newMessage
+      await api.post(`/api/chats/${selectedUser.user_id}`, {
+        message: newMessage,
       });
 
       setNewMessage("");
-      fetchChats(); // refresh chat
-    } catch (error) {
-      console.error("Send message failed", error);
-      alert("Failed to send message");
-    } finally {
-      setLoading(false);
+      fetchChats(selectedUser.user_id);
+    } catch (err) {
+      console.error("Failed to send message", err);
     }
   };
 
-  return (
-    <div className="chat-container">
-      <h3>Chat</h3>
+  // -------- AUTO SCROLL --------
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
-      <div className="chat-messages">
-        {messages.length === 0 ? (
-          <p className="no-messages">No messages yet</p>
-        ) : (
-          messages.map((msg) => (
-            <div key={msg.chat_id} className="chat-message sent">
-              {msg.message}
-            </div>
-          ))
-        )}
+  return (
+    <div className="ig-chat-wrapper">
+      {/* LEFT USERS */}
+      <div className="ig-users">
+        <h3>Messages</h3>
+
+        {users.map((user) => (
+          <div
+            key={user.user_id}
+            className={`ig-user ${
+              selectedUser?.user_id === user.user_id ? "active" : ""
+            }`}
+            onClick={() => {
+              setSelectedUser(user);
+              fetchChats(user.user_id);
+            }}
+          >
+            <img src="/default-avatar.png" alt="dp" />
+            <span>{user.username}</span>
+          </div>
+        ))}
       </div>
 
-      <div className="chat-input">
-        <input
-          type="text"
-          placeholder="Type a message..."
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-        />
-        <button onClick={handleSend} disabled={loading}>
-          {loading ? "..." : "Send"}
-        </button>
+      {/* RIGHT CHAT */}
+      <div className="ig-chat">
+        {!selectedUser ? (
+          <div className="ig-empty">Select a chat</div>
+        ) : (
+          <>
+            <div className="ig-header">
+              <img src="/default-avatar.png" alt="dp" />
+              <span>{selectedUser.username}</span>
+            </div>
+
+            <div className="ig-messages">
+              {messages.map((msg) => (
+                <div
+                  key={msg.chat_id}
+                  className={`ig-message ${
+                    msg.sender_id === loggedInUserId
+                      ? "ig-sent"
+                      : "ig-received"
+                  }`}
+                >
+                  {msg.message}
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
+
+            <div className="ig-input">
+              <input
+                placeholder="Message..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              />
+              <button onClick={handleSend}>Send</button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
