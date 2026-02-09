@@ -3,7 +3,6 @@ import api from "../../api/axios";
 import "./chat.css";
 
 function Chat() {
-  // ✅ 100% SAFE localStorage read
   const storedUser = localStorage.getItem("user");
 
   let parsedUser = null;
@@ -12,8 +11,7 @@ function Chat() {
       storedUser && storedUser !== "undefined"
         ? JSON.parse(storedUser)
         : null;
-  } catch (err) {
-    console.error("Invalid user in localStorage", err);
+  } catch {
     parsedUser = null;
   }
 
@@ -24,79 +22,62 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
-  const messagesEndRef = useRef(null);
+  const messagesRef = useRef(null);
 
-  // 🚫 Block chat if not logged in
   if (!loggedInUserId) {
     return (
       <div className="ig-chat-wrapper">
-        <div className="ig-empty">
-          Please login to access chats
-        </div>
+        <div className="ig-empty">Please login to access chats</div>
       </div>
     );
   }
 
-  // -------- FETCH USERS --------
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
-    try {
-      const res = await api.get("/api/users");
-
-      setUsers(
-        (res.data?.data || []).filter(
-          (u) => u.user_id !== loggedInUserId
-        )
-      );
-    } catch (err) {
-      console.error("Failed to fetch users", err);
-    }
+    const res = await api.get("/api/users");
+    setUsers(
+      (res.data?.data || []).filter(
+        (u) => u.user_id !== loggedInUserId
+      )
+    );
   };
 
-  // -------- FETCH CHATS --------
   const fetchChats = async (userId) => {
-    try {
-      const res = await api.get(`/api/chats/${userId}`);
-      setMessages(res.data?.data || []);
-    } catch (err) {
-      console.error("Failed to fetch chats", err);
-    }
+    const res = await api.get(`/api/chats/${userId}`);
+    setMessages(res.data?.data || []);
   };
 
-  // -------- SEND MESSAGE --------
   const handleSend = async () => {
     if (!newMessage.trim() || !selectedUser) return;
 
-    try {
-      await api.post(`/api/chats/${selectedUser.user_id}`, {
-        message: newMessage,
-      });
+    await api.post(`/api/chats/${selectedUser.user_id}`, {
+      message: newMessage,
+    });
 
-      setNewMessage("");
-      fetchChats(selectedUser.user_id);
-    } catch (err) {
-      console.error("Failed to send message", err);
-    }
+    setNewMessage("");
+    fetchChats(selectedUser.user_id);
   };
 
-  // -------- AUTO SCROLL --------
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop =
+        messagesRef.current.scrollHeight;
+    }
   }, [messages]);
 
   return (
     <div className="ig-chat-wrapper">
-      {/* LEFT USERS */}
+      {/* USERS LIST */}
       <div className="ig-users">
-        <h3>Messages</h3>
+        <h3 className="ig-users-title">Messages</h3>
 
         {users.map((user) => (
           <div
             key={user.user_id}
-            className={`ig-user ${
+            className={`ig-user-card ${
               selectedUser?.user_id === user.user_id ? "active" : ""
             }`}
             onClick={() => {
@@ -104,49 +85,68 @@ function Chat() {
               fetchChats(user.user_id);
             }}
           >
-            <img src="/default-avatar.png" alt="dp" />
-            <span>{user.username}</span>
+            <img
+              src={`https://i.pravatar.cc/150?img=${user.user_id % 70}`}
+              alt="dp"
+            />
+            <div>
+              <strong>{user.username}</strong>
+              <p>Tap to chat</p>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* RIGHT CHAT */}
+      {/* CHAT AREA */}
       <div className="ig-chat">
-        {!selectedUser ? (
-          <div className="ig-empty">Select a chat</div>
-        ) : (
-          <>
-            <div className="ig-header">
-              <img src="/default-avatar.png" alt="dp" />
-              <span>{selectedUser.username}</span>
-            </div>
-
-            <div className="ig-messages">
-              {messages.map((msg) => (
-                <div
-                  key={msg.chat_id}
-                  className={`ig-message ${
-                    msg.sender_id === loggedInUserId
-                      ? "ig-sent"
-                      : "ig-received"
-                  }`}
-                >
-                  {msg.message}
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-
-            <div className="ig-input">
-              <input
-                placeholder="Message..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+        {/* HEADER */}
+        <div className="ig-header">
+          {selectedUser ? (
+            <>
+              <img
+                src={`https://i.pravatar.cc/150?img=${selectedUser.user_id % 70}`}
+                alt="dp"
               />
-              <button onClick={handleSend}>Send</button>
+              <span>{selectedUser.username}</span>
+            </>
+          ) : (
+            <span>Select a conversation</span>
+          )}
+        </div>
+
+        {/* MESSAGES */}
+        <div className="ig-messages" ref={messagesRef}>
+          {!selectedUser ? (
+            <div className="ig-empty">
+              Select a chat to start messaging
             </div>
-          </>
+          ) : (
+            messages.map((msg) => (
+              <div
+                key={msg.chat_id}
+                className={`ig-message ${
+                  msg.sender_id === loggedInUserId
+                    ? "ig-sent"
+                    : "ig-received"
+                }`}
+              >
+                {msg.message}
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* INPUT */}
+        {selectedUser && (
+          <div className="ig-input">
+            <input
+              placeholder="Message..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+            />
+            <button onClick={handleSend}>Send</button>
+          </div>
         )}
       </div>
     </div>

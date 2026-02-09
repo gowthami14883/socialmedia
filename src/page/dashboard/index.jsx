@@ -9,32 +9,25 @@ import "./dashboard.css";
 
 function Dashboard() {
   const navigate = useNavigate();
-
-  // 🔥 Controls dashboard content
   const [currentView, setCurrentView] = useState("feed");
-
-  // 🔥 Popup ONLY for posts
   const [activePopup, setActivePopup] = useState(null);
-
   const [caption, setCaption] = useState("");
   const [mediaFile, setMediaFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-  const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
-
-  if (!token || !user) {
-    localStorage.clear();
-    navigate("/login");
-  }
-}, [navigate]);
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    if (!token || !user) {
+      localStorage.clear();
+      navigate("/login");
+    }
+  }, [navigate]);
 
   const handleLogout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("user");
-  navigate("/login");
-};
+    localStorage.clear();
+    navigate("/login");
+  };
 
   const handleFileChange = (e) => {
     setMediaFile(e.target.files[0]);
@@ -42,11 +35,7 @@ function Dashboard() {
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
-
-    if (!mediaFile) {
-      alert("Please select a file");
-      return;
-    }
+    if (!mediaFile) return alert("Select file");
 
     const formData = new FormData();
     formData.append("media", mediaFile);
@@ -55,11 +44,10 @@ function Dashboard() {
     try {
       setUploading(true);
       await api.post(API_ENDPOINTS.POSTS, formData);
-      alert("Post uploaded!");
       setCaption("");
       setMediaFile(null);
       setActivePopup(null);
-    } catch (err) {
+    } catch {
       alert("Upload failed");
     } finally {
       setUploading(false);
@@ -68,79 +56,74 @@ function Dashboard() {
 
   return (
     <div className="insta-layout">
-      {/* LEFT SIDEBAR */}
+      {/* SIDEBAR */}
       <div className="insta-sidebar">
-        <h2 className="insta-logo">Instagram</h2>
-
-        {/* DASHBOARD VIEWS */}
+        <h2 className="insta-logo">Instagram </h2>
         <button onClick={() => setCurrentView("feed")}>🏠 Feed</button>
         <button onClick={() => setCurrentView("profile")}>👤 Profile</button>
         <button onClick={() => setCurrentView("chat")}>💬 Chat</button>
-
-        {/* POPUP ACTION */}
         <button onClick={() => setActivePopup("posts")}>➕ Posts</button>
-
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
+        <button className="logout-btn" onClick={handleLogout}>Logout</button>
       </div>
 
-      {/* RIGHT CONTENT — FEED / PROFILE / CHAT */}
+      {/* CONTENT */}
       <div className="insta-content">
-        {currentView === "feed" && <Feed />}
+        {currentView === "feed" && (
+          <div className="feed-layout">
+
+            {/* FEED */}
+            <div className="scroll-view feed-center">
+              <Feed />
+            </div>
+
+            {/* RIGHT ADS + AUTO SCROLL */}
+            <div className="visual-panel">
+              <div className="auto-scroll">
+
+                {/* repeating images for smooth loop */}
+                {[
+                  47, 32, 15, 5, 68, 21, 9, 44, 18, 60,
+                  47, 32, 15, 5, 68, 21, 9, 44, 18, 60
+                ].map((img, i) => (
+                  <div className="ad-card" key={i}>
+                    <span className="ad-badge">Sponsored</span>
+                    <img
+                      src={`https://i.pravatar.cc/300?img=${img}`}
+                      className="ad-media"
+                      alt="ad"
+                    />
+                    <div className="ad-text">
+                      <h4>Discover Beauty ✨</h4>
+                      <p>Trending creators today</p>
+                      <button>Follow</button>
+                    </div>
+                  </div>
+                ))}
+
+              </div>
+            </div>
+          </div>
+        )}
+
         {currentView === "profile" && <Profile />}
         {currentView === "chat" && <Chat />}
       </div>
 
-      {/* POPUP — ONLY POSTS */}
+      {/* POST POPUP */}
       {activePopup === "posts" && (
         <div className="popup-overlay">
           <div className="popup-box">
-            <button
-              className="close-btn-top"
-              onClick={() => setActivePopup(null)}
-            >
-              ✖
-            </button>
-
-            <div className="posts-popup">
-              <h3>Upload Post</h3>
-
-              <form onSubmit={handlePostSubmit}>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                />
-
-                <input
-                  type="text"
-                  placeholder="Caption"
-                  value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
-                />
-
-                <div className="posts-btns">
-                  <button type="submit" disabled={uploading}>
-                    {uploading ? "Uploading..." : "Post"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setActivePopup(null)}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-
-              {mediaFile && (
-                <img
-                  src={URL.createObjectURL(mediaFile)}
-                  alt="preview"
-                  className="preview-img"
-                />
-              )}
-            </div>
+            <button className="close-btn-top" onClick={() => setActivePopup(null)}>✖</button>
+            <form onSubmit={handlePostSubmit}>
+              <input type="file" accept="image/*" onChange={handleFileChange} />
+              <input
+                type="text"
+                placeholder="Caption"
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+              />
+              <button type="submit">{uploading ? "Uploading..." : "Post"}</button>
+            </form>
           </div>
         </div>
       )}
