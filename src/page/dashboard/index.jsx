@@ -113,16 +113,19 @@ function Dashboard() {
       {activePopup === "posts" && (
         <div className="popup-overlay">
           <div className="popup-box">
+           
             <button className="close-btn-top" onClick={() => setActivePopup(null)}>✖</button>
+            <h1 style={{textAlign:"center", color:"brown",fontFamily:"sans-serif"}}>create post</h1><br></br>
+           
             <form onSubmit={handlePostSubmit}>
-              <input type="file" accept="image/*" onChange={handleFileChange} />
+              <input type="file" accept="image/*" onChange={handleFileChange} /><br></br><br></br>
               <input
                 type="text"
                 placeholder="Caption"
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
-              />
-              <button type="submit">{uploading ? "Uploading..." : "Post"}</button>
+              />&nbsp;&nbsp;&nbsp;
+              <button style={{background: "#007bff"}} type="submit">{uploading ? "Uploading..." : "Post"}</button>
             </form>
           </div>
         </div>

@@ -77,19 +77,29 @@
   z-index: 1000;
 }
 
+.popup-box button[type="submit"]{
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+
+}
+
+
 .popup-box {
   background: #fff;
-  width: 80%;
-  max-width: 600px;
-  max-height: 90vh;
+  width: 500px;
+  height: 250px;
   overflow-y: auto;
   border-radius: 12px;
   padding: 20px;
   position: relative;
+  align-items: center;
 }
 
 .close-btn-top {
   color: red;
+  margin-left: 450px;
+
 }
 
 

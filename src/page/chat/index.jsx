@@ -22,6 +22,10 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
 
+  const [menuMsgId, setMenuMsgId] = useState(null);
+  const [editingMsgId, setEditingMsgId] = useState(null);
+  const [editingText, setEditingText] = useState("");
+
   const messagesRef = useRef(null);
 
   if (!loggedInUserId) {
@@ -61,12 +65,47 @@ function Chat() {
     fetchChats(selectedUser.user_id);
   };
 
+  const handleDelete = async (messageId) => {
+    await api.delete(`/api/chats/${messageId}`);
+    setMenuMsgId(null);
+    fetchChats(selectedUser.user_id);
+  };
+
+  const handleEditSave = async (messageId) => {
+    if (!editingText.trim()) {
+      setEditingMsgId(null);
+      return;
+    }
+
+    await api.put(`/api/chats/${messageId}`, {
+      message: editingText,
+    });
+
+    setEditingMsgId(null);
+    setEditingText("");
+    fetchChats(selectedUser.user_id);
+  };
+
+  const handleEditKey = (e, msgId) => {
+    if (e.key === "Enter") handleEditSave(msgId);
+    if (e.key === "Escape") {
+      setEditingMsgId(null);
+      setEditingText("");
+    }
+  };
+
   useEffect(() => {
     if (messagesRef.current) {
       messagesRef.current.scrollTop =
         messagesRef.current.scrollHeight;
     }
   }, [messages]);
+
+  const capitalizeFirst = (text) => {
+  if (!text) return "";
+  return text.charAt(0).toUpperCase() + text.slice(1);
+  };
+
 
   return (
     <div className="ig-chat-wrapper">
@@ -90,7 +129,7 @@ function Chat() {
               alt="dp"
             />
             <div>
-              <strong>{user.username}</strong>
+              <strong>{capitalizeFirst(user.username)}</strong>
               <p>Tap to chat</p>
             </div>
           </div>
@@ -107,7 +146,7 @@ function Chat() {
                 src={`https://i.pravatar.cc/150?img=${selectedUser.user_id % 70}`}
                 alt="dp"
               />
-              <span>{selectedUser.username}</span>
+              <span>{capitalizeFirst(selectedUser.username)}</span>
             </>
           ) : (
             <span>Select a conversation</span>
@@ -122,15 +161,68 @@ function Chat() {
             </div>
           ) : (
             messages.map((msg) => (
-              <div
-                key={msg.chat_id}
-                className={`ig-message ${
-                  msg.sender_id === loggedInUserId
-                    ? "ig-sent"
-                    : "ig-received"
-                }`}
-              >
-                {msg.message}
+              <div key={msg.chat_id} className="ig-message-wrapper">
+                <div
+                  className={`ig-message ${
+                    msg.sender_id === loggedInUserId
+                      ? "ig-sent"
+                      : "ig-received"
+                  }`}
+                  onClick={() => {
+                    if (
+                      msg.sender_id === loggedInUserId &&
+                      editingMsgId !== msg.chat_id
+                    ) {
+                      setMenuMsgId(
+                        menuMsgId === msg.chat_id
+                          ? null
+                          : msg.chat_id
+                      );
+                    }
+                  }}
+                >
+                  {editingMsgId === msg.chat_id ? (
+                    <input
+                      className="ig-edit-inline"
+                      value={editingText}
+                      autoFocus
+                      onChange={(e) =>
+                        setEditingText(e.target.value)
+                      }
+                      onKeyDown={(e) =>
+                        handleEditKey(e, msg.chat_id)
+                      }
+                      onBlur={() =>
+                        handleEditSave(msg.chat_id)
+                      }
+                    />
+                  ) : (
+                    msg.message
+                  )}
+                </div>
+
+                {menuMsgId === msg.chat_id &&
+                  msg.sender_id === loggedInUserId && (
+                    <div className="ig-msg-menu">
+                      <button
+                        onClick={() => {
+                          setEditingMsgId(msg.chat_id);
+                          setEditingText(msg.message);
+                          setMenuMsgId(null);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="danger"
+                        onClick={() =>
+                          handleDelete(msg.chat_id)
+                        }
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
               </div>
             ))
           )}
@@ -143,7 +235,9 @@ function Chat() {
               placeholder="Message..."
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              onKeyDown={(e) =>
+                e.key === "Enter" && handleSend()
+              }
             />
             <button onClick={handleSend}>Send</button>
           </div>

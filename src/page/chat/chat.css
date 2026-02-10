@@ -149,3 +149,73 @@
   margin: auto;
   color: gray;
 }
+
+
+/* MESSAGE WRAPPER */
+.ig-message-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* EDIT / DELETE MENU */
+.ig-msg-menu {
+  position: absolute;
+  top: -36px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  display: flex;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.ig-msg-menu button {
+  padding: 6px 12px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.ig-msg-menu button:hover {
+  background: #f5f5f5;
+}
+
+.ig-msg-menu .danger {
+  color: red;
+}
+
+/* EDIT BOX */
+.ig-edit-box {
+  display: flex;
+  gap: 6px;
+}
+
+.ig-edit-box input {
+  padding: 8px 12px;
+  border-radius: 16px;
+  border: 1px solid #dbdbdb;
+}
+
+.ig-edit-box button {
+  background: #0095f6;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* INLINE EDIT INPUT */
+.ig-edit-inline {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: inherit;
+  font-family: inherit;
+}
