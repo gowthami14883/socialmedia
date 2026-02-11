@@ -13,6 +13,7 @@ function Dashboard() {
   const [activePopup, setActivePopup] = useState(null);
   const [caption, setCaption] = useState("");
   const [mediaFile, setMediaFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -58,12 +59,12 @@ function Dashboard() {
     <div className="insta-layout">
       {/* SIDEBAR */}
       <div className="insta-sidebar">
-        <h2 className="insta-logo">Instagram </h2>
+        <h2 className="insta-logo" style={{display: "flex",alignItems: "center",gap: "10px"}}><img src="src\assests\dashboard\logo.png" style={{width:"70px",height:"70px"}} ></img>LifeinFrames </h2>
         <button onClick={() => setCurrentView("feed")}>🏠 Feed</button>
         <button onClick={() => setCurrentView("profile")}>👤 Profile</button>
         <button onClick={() => setCurrentView("chat")}>💬 Chat</button>
         <button onClick={() => setActivePopup("posts")}>➕ Posts</button>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
+        <button style={{background:"darkred"}}className="logout-btn" onClick={handleLogout}>Logout</button>
       </div>
 
       {/* CONTENT */}
@@ -111,25 +112,43 @@ function Dashboard() {
 
       {/* POST POPUP */}
       {activePopup === "posts" && (
-        <div className="popup-overlay">
-          <div className="popup-box">
-           
-            <button className="close-btn-top" onClick={() => setActivePopup(null)}>✖</button>
-            <h1 style={{textAlign:"center", color:"brown",fontFamily:"sans-serif"}}>create post</h1><br></br>
-           
-            <form onSubmit={handlePostSubmit}>
-              <input type="file" accept="image/*" onChange={handleFileChange} /><br></br><br></br>
-              <input
-                type="text"
-                placeholder="Caption"
-                value={caption}
-                onChange={(e) => setCaption(e.target.value)}
-              />&nbsp;&nbsp;&nbsp;
-              <button style={{background: "#007bff"}} type="submit">{uploading ? "Uploading..." : "Post"}</button>
-            </form>
-          </div>
-        </div>
-      )}
+  <div className="popup-overlay">
+    <div className="popup-box-modern">
+
+      {/* HEADER */}
+      <div className="popup-header">
+        <h3 style={{textAlign:"center"}}>Create post</h3>
+        <button onClick={() => setActivePopup(null)}>✖</button>
+      </div>
+
+      {/* BODY */}
+      <form onSubmit={handlePostSubmit} className="popup-body">
+
+        {/* Caption */}
+        <textarea
+          placeholder="What's on your mind?"
+          value={caption}
+          onChange={(e) => setCaption(e.target.value)}
+        />
+
+        {/* File Upload */}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+
+        {/* Submit */}
+        <button type="submit" disabled={uploading}>
+          {uploading ? "Uploading..." : "Post"}
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
