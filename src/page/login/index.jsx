@@ -22,24 +22,18 @@ function Login() {
       try {
         setApiError("");
 
-        // 🔹 1. LOGIN
         const loginRes = await api.post(API_ENDPOINTS.LOGIN, values);
-
         const token = loginRes.data.data.token;
 
-        // 🔹 2. SAVE TOKEN
         localStorage.setItem("token", token);
 
-        // 🔹 3. FETCH LOGGED-IN USER USING TOKEN
         const meRes = await api.get("/api/users/me");
 
-        // 🔹 4. SAVE USER OBJECT
         localStorage.setItem(
           "user",
           JSON.stringify(meRes.data.data)
         );
 
-        // 🔹 5. GO TO DASHBOARD
         navigate("/dashboard");
       } catch (error) {
         setApiError(
@@ -52,35 +46,65 @@ function Login() {
   });
 
   return (
-    <div className="login-container">
-      <form onSubmit={formik.handleSubmit} className="login-form">
-        <h2>Login</h2>
+    <div className="login-page">
 
-        <input
-          name="email"
-          placeholder="Email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-        />
-
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-        />
-
-        {apiError && <div className="api-error">{apiError}</div>}
-
-        <button type="submit">
-          {formik.isSubmitting ? "Logging in..." : "Login"}
-        </button>
+      {/* LEFT SIDE */}
+      <div className="login-left">
+      <h1 className="hey" style={{display: "flex",alignItems: "center",gap: "10px"}}><img src="src\assests\dashboard\logo.png" style={{width:"70px",height:"70px"}} ></img>Welcome Back 👋</h1>
 
         <p>
-          Don’t have an account? <Link to="/register">Register</Link>
+          Log in to continue sharing your moments and connecting
+          with your community.
         </p>
-      </form>
+
+        <div className="image-group">
+          <img
+            src="https://plus.unsplash.com/premium_vector-1740130492063-e9474d6d2c86?q=80&w=551&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="login visual 1"
+            className="login-image"
+          />
+          <img
+            src="https://plus.unsplash.com/premium_vector-1724612296684-1ebc06e4f0bf?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="login visual 2"
+            className="login-image"
+          />
+        </div>
+      </div>
+
+      {/* RIGHT SIDE */}
+      <div className="login-right">
+        <div className="login-container">
+          <form onSubmit={formik.handleSubmit} className="login-form">
+            <h2>Login</h2>
+
+            <input
+              name="email"
+              placeholder="Email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+            />
+
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={formik.values.password}
+              onChange={formik.handleChange}
+            />
+
+            {apiError && <div className="api-error">{apiError}</div>}
+
+            <button type="submit">
+              {formik.isSubmitting ? "Logging in..." : "Login"}
+            </button>
+
+            <p>
+              Don’t have an account? <Link to="/register">Register</Link>
+            </p>
+          </form>
+        </div>
+      </div>
+
     </div>
   );
 }

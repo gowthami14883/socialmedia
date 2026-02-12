@@ -9,9 +9,9 @@
 
 /* SIDEBAR */
 .insta-sidebar {
-  width: 250px;
+  width: 300px;
   height: 100%;
-  border-right: 2px solid #3527af;
+  border-right: 2px solid #af8b27;
   padding: 20px;
   display: flex;
   flex-direction: column;
