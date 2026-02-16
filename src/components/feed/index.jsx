@@ -5,79 +5,98 @@ function Feed() {
   const [posts, setPosts] = useState([]);
   const [commentText, setCommentText] = useState({});
 
-  useEffect(() => {
-    const staticPosts = [
-      {
-        id: 1,
-        user: "girl",
-        avatar: "https://i.pravatar.cc/150?img=47",
-        type: "image",
-        media: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900",
-        caption: "Chasing good vibes ✨",
-        likes: 234,
-        liked: false,
-        comments: []
-      },
-      {
-        id: 2,
-        user: "anime_girl",
-        avatar: "https://i.pravatar.cc/150?img=32",
-        type: "image",
-        media: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900",
-        caption: "Cartoon vibes 💕",
-        likes: 980,
-        liked: false,
-        comments: []
-      },
-      {
-        id: 3,
-        user: "soft_style",
-        avatar: "https://i.pravatar.cc/150?img=15",
-        type: "image",
-        media: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=900",
-        caption: "Soft & stylish 🌸",
-        likes: 1200,
-        liked: false,
-        comments: []
-      },
-      {
-        id: 4,
-        user: "fashion_daily",
-        avatar: "https://i.pravatar.cc/150?img=5",
-        type: "image",
-        media: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900",
-        caption: "Outfit goals 🖤",
-        likes: 860,
-        liked: false,
-        comments: []
-      },
-      {
-        id: 5,
-        user: "reel_creator",
-        avatar: "https://i.pravatar.cc/150?img=68",
-        type: "video",
-        media: "https://www.w3schools.com/html/mov_bbb.mp4",
-        caption: "Reels all day 🎬🔥",
-        likes: 2400,
-        liked: false,
-        comments: []
-      }
-    ];
+  // ✅ Static Demo Posts
+  const staticPosts = [
+    {
+      id: "static-1",
+      user: "girl",
+      avatar: "https://i.pravatar.cc/150?img=47",
+      media: [
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900"
+      ],
+      caption: "Chasing good vibes ✨",
+      likes: 234,
+      liked: false,
+      comments: []
+    },
+    {
+      id: "static-2",
+      user: "anime_girl",
+      avatar: "https://i.pravatar.cc/150?img=32",
+      media: [
+        "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900"
+      ],
+      caption: "Cartoon vibes 💕",
+      likes: 980,
+      liked: false,
+      comments: []
+    }
+  ];
 
-    setTimeout(() => {
-      setPosts(staticPosts);
-    }, 400);
+  // ✅ Fetch Dynamic Posts
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    fetch("http://localhost:3000/api/posts", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(async (res) => {
+        const text = await res.text();
+
+        try {
+          return JSON.parse(text);
+        } catch (err) {
+          console.error("Response not JSON:", text);
+          return [];
+        }
+      })
+      .then((data) => {
+        const dynamicPosts = (data.data || data || []).map((post) => ({
+          id: post.post_id,
+
+          // ✅ Use real username from backend
+          user: post.User?.username || "Unknown",
+
+          // ✅ Use real profile picture if exists
+          avatar: post.User?.profilepic
+            ? `http://localhost:3000/${post.User.profilepic}`
+            : "https://i.pravatar.cc/150?img=10",
+
+          // ✅ Handle multiple images
+          media: Array.isArray(post.media_url)
+            ? post.media_url.map(
+              (img) => `http://localhost:3000/${img}`
+            )
+            : [`http://localhost:3000/${post.media_url}`],
+
+          caption: post.caption,
+          likes: post.likes || 0,
+          liked: false,
+          comments: post.comments || []
+        }));
+
+        // Combine static + dynamic
+        setPosts([...staticPosts, ...dynamicPosts]);
+      })
+
+      .catch((err) => {
+        console.error("Error fetching posts:", err);
+        setPosts(staticPosts); // fallback to static only
+      });
   }, []);
 
+  // ❤️ Like button
   const handleLike = (id) => {
     setPosts((prev) =>
       prev.map((post) =>
         post.id === id
           ? {
-              ...post,
-              liked: !post.liked,
-              likes: post.liked ? post.likes - 1 : post.likes + 1
-            }
+            ...post,
+            liked: !post.liked,
+            likes: post.liked ? post.likes - 1 : post.likes + 1
+          }
           : post
       )
     );
@@ -97,12 +116,12 @@ function Feed() {
       prev.map((post) =>
         post.id === id
           ? {
-              ...post,
-              comments: [
-                ...post.comments,
-                { user: "you", text: commentText[id] }
-              ]
-            }
+            ...post,
+            comments: [
+              ...post.comments,
+              { user: "you", text: commentText[id] }
+            ]
+          }
           : post
       )
     );
@@ -117,19 +136,26 @@ function Feed() {
     <div className="ig-feed">
       {posts.map((post) => (
         <div className="ig-post" key={post.id}>
-          
+
           {/* Header */}
           <div className="ig-post-header">
-            <img src={post.avatar} className="ig-avatar" alt={post.user} />
+            <img
+              src={post.avatar}
+              className="ig-avatar"
+              alt={post.user}
+            />
             <span className="ig-username">{post.user}</span>
           </div>
 
-          {/* Media */}
-          {post.type === "image" ? (
-            <img src={post.media} className="ig-media" alt="" />
-          ) : (
-            <video src={post.media} className="ig-media" controls muted loop />
-          )}
+          {/* ✅ MEDIA (Supports Multiple) */}
+          {post.media.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              className="ig-media"
+              alt="post"
+            />
+          ))}
 
           {/* Actions */}
           <div className="ig-actions">

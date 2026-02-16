@@ -109,7 +109,7 @@
 /* SENT */
 .ig-sent {
   align-self: flex-end;
-  background: #3797f0;
+  background:  linear-gradient(90deg, #f58529, #dd2a7b);
   color: #fff;
 }
 
@@ -139,7 +139,7 @@
 .ig-input button {
   background: none;
   border: none;
-  color: #0095f6;
+  color: #8134af;
   font-weight: 600;
   cursor: pointer;
 }

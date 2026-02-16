@@ -12,8 +12,9 @@ function Dashboard() {
   const [currentView, setCurrentView] = useState("feed");
   const [activePopup, setActivePopup] = useState(null);
   const [caption, setCaption] = useState("");
-  const [mediaFile, setMediaFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [mediaFiles, setMediaFiles] = useState([]);
+  const [preview, setPreview] = useState([]);
+ // ✅ already present
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -30,23 +31,42 @@ function Dashboard() {
     navigate("/login");
   };
 
+  // ✅ UPDATED FILE CHANGE FUNCTION
   const handleFileChange = (e) => {
-    setMediaFile(e.target.files[0]);
-  };
+  const files = Array.from(e.target.files);
+  if (!files.length) return;
+
+  setMediaFiles(files);
+
+  const previewUrls = files.map((file) =>
+    URL.createObjectURL(file)
+  );
+
+  setPreview(previewUrls);
+};
+
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
-    if (!mediaFile) return alert("Select file");
+    if (!mediaFiles.length) return alert("Select file");
+
 
     const formData = new FormData();
-    formData.append("media", mediaFile);
+    mediaFiles.forEach((file) => 
+      {
+       formData.append("media", file);
+      });
+
     formData.append("caption", caption);
 
     try {
       setUploading(true);
       await api.post(API_ENDPOINTS.POSTS, formData);
+
       setCaption("");
-      setMediaFile(null);
+      setMediaFiles([]);
+      setPreview([]);
+ // ✅ clear preview
       setActivePopup(null);
     } catch {
       alert("Upload failed");
@@ -59,29 +79,55 @@ function Dashboard() {
     <div className="insta-layout">
       {/* SIDEBAR */}
       <div className="insta-sidebar">
-        <h2 className="insta-logo" style={{display: "flex",alignItems: "center",gap: "10px"}}><img src="src\assests\dashboard\logo.png" style={{width:"70px",height:"70px"}} ></img>LifeinFrames </h2>
-        <button onClick={() => setCurrentView("feed")}>🏠 Feed</button>
-        <button onClick={() => setCurrentView("profile")}>👤 Profile</button>
-        <button onClick={() => setCurrentView("chat")}>💬 Chat</button>
-        <button onClick={() => setActivePopup("posts")}>➕ Posts</button>
-        <button style={{background:"darkred"}}className="logout-btn" onClick={handleLogout}>Logout</button>
+        <h2
+          className="insta-logo"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            color: "#8134af",
+          }}
+        >
+          <img
+            src="src\assests\dashboard\logo.png"
+            style={{ width: "70px", height: "70px" }}
+          />
+          LifeinFrames
+        </h2>
+
+        <div className="sidebar-link" onClick={() => setCurrentView("feed")}>
+          🏠 Feed
+        </div>
+        <div className="sidebar-link" onClick={() => setCurrentView("profile")}>
+          👤 Profile
+        </div>
+        <div className="sidebar-link" onClick={() => setCurrentView("chat")}>
+          💬 Chat
+        </div>
+        <div className="sidebar-link" onClick={() => {
+          setMediaFiles([]);
+          setPreview([]);
+          setCaption("");
+          setActivePopup("posts");
+          }}>➕ Posts
+        </div>
+
+
+        <div className="sidebar-link logout-link" onClick={handleLogout}>
+          Logout
+        </div>
       </div>
 
       {/* CONTENT */}
       <div className="insta-content">
         {currentView === "feed" && (
           <div className="feed-layout">
-
-            {/* FEED */}
             <div className="scroll-view feed-center">
               <Feed />
             </div>
 
-            {/* RIGHT ADS + AUTO SCROLL */}
             <div className="visual-panel">
               <div className="auto-scroll">
-
-                {/* repeating images for smooth loop */}
                 {[
                   47, 32, 15, 5, 68, 21, 9, 44, 18, 60,
                   47, 32, 15, 5, 68, 21, 9, 44, 18, 60
@@ -100,7 +146,6 @@ function Dashboard() {
                     </div>
                   </div>
                 ))}
-
               </div>
             </div>
           </div>
@@ -112,43 +157,57 @@ function Dashboard() {
 
       {/* POST POPUP */}
       {activePopup === "posts" && (
-  <div className="popup-overlay">
-    <div className="popup-box-modern">
+        <div className="popup-overlay">
+          <div className="popup-box-modern">
+            <div className="popup-header">
+              <h3 style={{ textAlign: "center" }}>Create post</h3>
+              <button onClick={() => {
+                setActivePopup(null);
+                setMediaFiles([]);
+                setPreview([]);
+                setCaption("");
+                }}> ✖
+              </button>
 
-      {/* HEADER */}
-      <div className="popup-header">
-        <h3 style={{textAlign:"center"}}>Create post</h3>
-        <button onClick={() => setActivePopup(null)}>✖</button>
-      </div>
 
-      {/* BODY */}
-      <form onSubmit={handlePostSubmit} className="popup-body">
+            </div>
 
-        {/* Caption */}
-        <textarea
-          placeholder="What's on your mind?"
-          value={caption}
-          onChange={(e) => setCaption(e.target.value)}
-        />
+            <form onSubmit={handlePostSubmit} className="popup-body">
+              <textarea
+                placeholder="What's on your mind?"
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+              />
 
-        {/* File Upload */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
+              <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handleFileChange}
+              />
 
-        {/* Submit */}
-        <button type="submit" disabled={uploading}>
-          {uploading ? "Uploading..." : "Post"}
-        </button>
 
-      </form>
+              {/* ✅ PREVIEW SECTION */}
+              {preview.length > 0 && (
+                <div className="preview-container-multiple">
+                  {preview.map((src, index) => (
+                    <img key={index} src={src}
+                     alt="preview"
+                      className="preview-image-multiple"
+                    />
+                    ))
+                  }
+                </div>
+              )}
 
-    </div>
-  </div>
-)}
 
+              <button type="submit" disabled={uploading}>
+                {uploading ? "Uploading..." : "Post"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
