@@ -2,16 +2,20 @@ import multer, { FileFilterCallback } from "multer";
 import path from "path";
 import { Request } from "express";
 
-// Disk storage configuration
-const storage = multer.diskStorage({
-  destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
-    cb(null, "uploads/posts"); // must always pass a string
-  },
-  filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
-    const uniqueName = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueName + path.extname(file.originalname)); // must always pass a string
-  }
-});
+const isVercel = !!process.env.VERCEL;
+
+// Disk storage for local, memory storage for Vercel (read-only filesystem)
+const storage = isVercel
+  ? multer.memoryStorage()
+  : multer.diskStorage({
+      destination: (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) => {
+        cb(null, "uploads/posts");
+      },
+      filename: (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) => {
+        const uniqueName = Date.now() + "-" + Math.round(Math.random() * 1e9);
+        cb(null, uniqueName + path.extname(file.originalname));
+      }
+    });
 
 // File type filter
 const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallback) => {
