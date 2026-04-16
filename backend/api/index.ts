@@ -13,7 +13,8 @@ let dbReady = false;
 const initDb = async () => {
   if (!dbReady) {
     await db.sequelize.authenticate();
-    console.log("Database connected (Vercel serverless)");
+    await db.sequelize.sync();
+    console.log("Database connected and synced (Vercel serverless)");
     dbReady = true;
   }
 };
