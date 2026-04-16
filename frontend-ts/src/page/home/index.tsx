@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import logo from "../../assests/dashboard/social-media.png";
 import "./home.css";
 
 function Home() {
@@ -18,7 +19,7 @@ function Home() {
 
       {/* NAVBAR */}
       <nav className="navbar">
-        <h2 className="logo" style={{ display: "flex", alignItems: "center", gap: "10px" }}><img src="src\assests\dashboard\social-media.png" style={{ width: "70px", height: "70px" }} ></img>V-Connect</h2>
+        <h2 className="logo" style={{ display: "flex", alignItems: "center", gap: "10px" }}><img src={logo} style={{ width: "70px", height: "70px" }} alt="V-Connect logo" />V-Connect</h2>
         <div className="nav-links">
           <Link to="/login" className="nav-btn login-btn">Login</Link>
           <Link to="/register" className="nav-btn register-btn">Register</Link>

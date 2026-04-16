@@ -1,4 +1,5 @@
 import "./login.css";
+import logo from "../../assests/dashboard/social-media.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -105,7 +106,7 @@ function Login() {
           }}
         >
           <img
-            src="src\assests\dashboard\social-media.png"
+            src={logo}
             style={{ width: "70px", height: "70px" }}
           />
           Welcome Back 👋
