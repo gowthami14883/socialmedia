@@ -46,7 +46,7 @@ app.use(express.json());
 app.get("/api/health", (_req, res) => {
   res.json({
     status: "ok",
-    environment: process.env.RAILWAY_ENVIRONMENT ? "railway" : "local",
+    environment: process.env.VERCEL ? "vercel" : "local",
     timestamp: new Date().toISOString(),
   });
 });

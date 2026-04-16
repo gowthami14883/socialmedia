@@ -4,7 +4,7 @@ export const API_BASE_URL: string =
 export const IS_PRODUCTION = !!import.meta.env.VITE_API_BASE_URL;
 
 if (import.meta.env.DEV) {
-  console.log(`[API] Mode: ${IS_PRODUCTION ? "Railway" : "Local"}`);
+  console.log(`[API] Mode: ${IS_PRODUCTION ? "Vercel" : "Local"}`);
   console.log(`[API] Base URL: ${API_BASE_URL}`);
 }
 

@@ -6,16 +6,16 @@ import db from "./models/index.js";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
-const isRailway = !!process.env.RAILWAY_ENVIRONMENT;
+const isVercel = !!process.env.VERCEL;
 
 const startServer = async () => {
   try {
     await db.sequelize.authenticate();
 
     console.log("\n=== Server Configuration ===");
-    console.log(`Mode:     ${isRailway ? "Railway (Production)" : "Local (Development)"}`);
+    console.log(`Mode:     ${isVercel ? "Vercel (Production)" : "Local (Development)"}`);
     console.log(`Port:     ${PORT}`);
-    console.log(`Database: ${process.env.DATABASE_URL ? "Railway MySQL (DATABASE_URL)" : `${process.env.DB_HOST}/${process.env.DB_NAME}`}`);
+    console.log(`Database: ${process.env.DATABASE_URL ? "Remote MySQL (DATABASE_URL)" : `${process.env.DB_HOST}/${process.env.DB_NAME}`}`);
     console.log(`CORS:     ${process.env.FRONTEND_URL || "localhost only"}`);
     console.log("Database connected");
     console.log("============================\n");
