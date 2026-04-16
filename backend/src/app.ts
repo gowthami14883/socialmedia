@@ -1,7 +1,10 @@
 // src/app.ts
+import dotenv from "dotenv";
 import express, { Application } from "express";
 import cors from "cors";
 import path from "path";
+
+dotenv.config();
 
 // Import route files (make sure these export Router objects)
 import userRoutes from "./routes/user.routes.js";
@@ -20,13 +23,17 @@ const app: Application = express();
 // ---------------- Middlewares ----------------
 
 // CORS configuration
+const allowedOrigins: string[] = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+];
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:5173",
-      "http://192.168.191.99:5173",
-    ],
+    origin: allowedOrigins,
     credentials: true,
   })
 );
