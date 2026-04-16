@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+// Force bundler to include mysql2 (Sequelize loads it dynamically)
+import "mysql2";
+
 import app from "../src/app.js";
 import db from "../src/models/index.js";
 import type { IncomingMessage, ServerResponse } from "http";
