@@ -6,8 +6,8 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const _token : string | null = localStorage.getItem("token");
     // Uncomment if you want auto redirect
+    // const token = localStorage.getItem("token");
     // if (token) {
     //   navigate("/dashboard");
     // }

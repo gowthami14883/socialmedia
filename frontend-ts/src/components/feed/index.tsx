@@ -35,7 +35,7 @@ interface Post {
 function Feed({ page, setTotalPages, loading, setLoading }: FeedProps) {
   const [posts, setPosts] = useState<Post[]>([]);
   const [commentText, setCommentText] = useState<Record<string | number, string>>({});
-  const [activeCommentPost, setActiveCommentPost] = useState<number | null>(null);
+  const [activeCommentPost, setActiveCommentPost] = useState<string | number | null>(null);
 
   const limit = 5;
   const token = localStorage.getItem("token");
@@ -114,7 +114,7 @@ function Feed({ page, setTotalPages, loading, setLoading }: FeedProps) {
   // ==============================
   // Fetch Comments for Single Post
   // ==============================
-  const fetchCommentsForPost = async (postId: number) => {
+  const fetchCommentsForPost = async (postId: string | number) => {
     try {
       const res = await api.get(`${API_ENDPOINTS.COMMENT}/post/${postId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -136,7 +136,7 @@ function Feed({ page, setTotalPages, loading, setLoading }: FeedProps) {
   // ==============================
   // Like / Unlike
   // ==============================
-  const handleLike = async (postId: number, liked: boolean) => {
+  const handleLike = async (postId: string | number, liked: boolean) => {
     try {
       if (liked) {
         await api.delete(`${API_ENDPOINTS.LIKES}/${postId}`, {
@@ -165,7 +165,7 @@ function Feed({ page, setTotalPages, loading, setLoading }: FeedProps) {
   // ==============================
   // Add Comment
   // ==============================
-  const handleAddComment = async (postId: number) => {
+  const handleAddComment = async (postId: string | number) => {
     if (!commentText[postId]?.trim()) return;
 
     try {
@@ -204,7 +204,7 @@ function Feed({ page, setTotalPages, loading, setLoading }: FeedProps) {
     }
   };
 
-  const handleCommentChange = (id: number, value: string) => {
+  const handleCommentChange = (id: string | number, value: string) => {
     setCommentText((prev) => ({ ...prev, [id]: value }));
   };
 

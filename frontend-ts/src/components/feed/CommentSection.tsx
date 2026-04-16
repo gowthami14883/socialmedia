@@ -2,10 +2,10 @@ import { FiArrowUpCircle } from "react-icons/fi";
 
 interface Props {
   post: any;
-  activeCommentPost: number | null;
-  commentText: Record<number, string>;
-  handleCommentChange: (id: number, value: string) => void;
-  handleAddComment: (id: number) => void;
+  activeCommentPost: string | number | null;
+  commentText: Record<string | number, string>;
+  handleCommentChange: (id: string | number, value: string) => void;
+  handleAddComment: (id: string | number) => void;
 }
 
 function PostComments({

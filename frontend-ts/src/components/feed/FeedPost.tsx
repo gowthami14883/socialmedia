@@ -7,13 +7,13 @@ import PostComments from "./CommentSection";
 
 interface FeedPostProps {
   post: any;
-  handleLike: (id: number, liked: boolean) => void;
+  handleLike: (id: string | number, liked: boolean) => void;
   activeCommentPost: string | number | null;
   setActiveCommentPost: React.Dispatch<React.SetStateAction<string | number | null>>;
   fetchCommentsForPost: (id: string | number) => Promise<void>;
-  commentText: Record<number, string>;
-  handleCommentChange: (id: number, value: string) => void;
-  handleAddComment: (id: number) => void;
+  commentText: Record<string | number, string>;
+  handleCommentChange: (id: string | number, value: string) => void;
+  handleAddComment: (id: string | number) => void;
 }
 function FeedPost({
   post,
