@@ -1,0 +1,405 @@
+.profile-wrapper {
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  background: #ffffff;
+  padding: 40px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+.profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* HEADER */
+.profile-header {
+  display: flex;
+  gap: 40px;
+  max-width: 900px;
+  margin: auto;
+  /* align-items: center; */
+  margin-bottom: 20px;
+  position: relative; /* 🔥 important */
+}
+
+/* PROFILE PIC */
+.profile-pic {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 2px solid #dbdbdb;
+  object-fit: cover;
+}
+
+/* DETAILS */
+.profile-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-details h2 {
+  margin-bottom: 8px;
+}
+
+/* 🔥 BIO UNDER PROFILE PIC */
+.profile-bio {
+  position: absolute;
+  top: 165px;           /* below profile image */
+  left: 0;              /* align with image */
+  width: 150px;         /* same as image width */
+  font-size: 14px;
+  color: #262626;
+  text-align: center;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* STATS */
+.profile-stats {
+  display: flex;
+  gap: 30px;
+  margin-top: 10px;
+}
+
+.profile-stats div {
+  text-align: center;
+}
+
+.profile-stats strong {
+  font-size: 18px;
+  display: block;
+}
+
+.profile-stats span {
+  font-size: 14px;
+  color: #555;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  opacity: 0.7;
+}
+
+.modal {
+  position: absolute;
+  top: 90px;        /* adjust if needed */
+  right: 1;         /* 🔥 this moves it to right side */
+  background: white;
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  
+}
+
+/* MODAL
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+} */
+.modal-box {
+  background: #fff;
+  padding: 15px;
+  width: 400px;
+  max-height: 250px; /* enough to scroll with 5+ items */
+  overflow-y: auto;
+  border-radius: 8px;
+}
+
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  opacity: 0.7;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-btn {
+  background: #0095f6;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.remove-btn {
+  background: #ed4956;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 100px;
+}
+
+/* POSTS */
+.posts-section {
+  max-width: 900px;
+  margin: 60px auto 0; /* 🔥 space for bio */
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  z-index: 100px;
+}
+
+.post-card {
+  aspect-ratio: 1 / 1;
+  background: #eee;
+  overflow: hidden;
+  img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+  
+}
+
+/* .post-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} */
+
+.mini-dp {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.caption{
+  z-index: 1000px;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.follow-btn,
+.message-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+}
+
+.follow-btn {
+  background: #0095f6;
+  color: white;
+}
+
+.follow-btn.following {
+  background: #efefef;
+  color: black;
+}
+
+.message-btn {
+  background: #efefef;
+}
+
+/* ================= MOBILE RESPONSIVE PROFILE ================= */
+@media (max-width: 768px) {
+
+  .profile-wrapper {
+    padding: 15px;
+  }
+
+  .profile-container {
+    padding: 10px;
+  }
+
+  /* HEADER STACKED */
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  /* Smaller profile picture */
+  .profile-pic {
+    width: 110px;
+    height: 110px;
+  }
+
+  /* Remove absolute bio positioning */
+  .profile-bio {
+    position: static;
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* Center profile details */
+  .profile-details {
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Stats evenly spaced */
+  .profile-stats {
+    justify-content: space-around;
+    width: 100%;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .profile-stats strong {
+    font-size: 16px;
+  }
+
+  .profile-stats span {
+    font-size: 13px;
+  }
+
+  /* Buttons full width look */
+  .profile-actions {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .follow-btn,
+  .message-btn {
+    flex: 1;
+    max-width: 150px;
+  }
+
+  /* POSTS GRID - 2 columns for mobile */
+  .posts-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .posts-section {
+    margin-top: 30px;
+  }
+
+  /* Modal full width on mobile */
+  .modal-box {
+    width: 95%;
+    max-height: 60vh;
+  }
+}
+
+
+/* POST MODAL */
+
+.post-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.post-modal {
+  background: #fff;
+  width: 500px;
+  max-width: 90%;
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+}
+
+.post-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dots-wrapper {
+  position: relative;  /* important */
+}
+
+.three-dots {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.delete-dropdown {
+  position: absolute;
+  top: 28px;   /* below 3 dots */
+  right: 28;   
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 5px 10px;
+}
+
+.delete-dropdown button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.close-icon {
+  cursor: pointer;
+}
+
+.big-post-image {
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.big-post-caption {
+  margin-top: 10px;
+}

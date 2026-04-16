@@ -1,0 +1,177 @@
+.ig-feed {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 20px 0;
+  background: #fafafa;
+}
+
+/* Post */
+.ig-post {
+  background: #fff;
+  border: 1px solid #dbdbdb;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  width: 500px;
+}
+
+/* Header */
+.ig-post-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+}
+
+.ig-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ig-username {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Media */
+.ig-media {
+  width: 100%;
+  max-height: 450px;
+  object-fit: cover;
+}
+
+/* Actions */
+.ig-actions {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Icon Styling */
+.ig-actions svg {
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.ig-actions svg:hover {
+  opacity: 0.7;
+}
+
+.ig-actions svg:active {
+  transform: scale(1.2);
+}
+
+/* Like Button */
+.like-btn.liked svg {
+  color: red;
+}
+
+/* Likes */
+.ig-likes {
+  padding: 0 12px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* Caption */
+.ig-caption {
+  padding: 6px 12px 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Comments */
+.ig-comments {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.ig-comment {
+  margin-bottom: 4px;
+}
+
+/* Add Comment */
+.ig-add-comment {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #eee;
+  padding: 8px 10px;
+}
+
+.ig-add-comment input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: transparent;
+}
+
+.ig-add-comment button {
+  background: none;
+  border: none;
+  color: black;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: opacity 0.2s ease;
+}
+
+.ig-add-comment button:hover {
+  opacity: 0.7;
+}
+
+.comment-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.comment-count-number {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+/* ================= MOBILE RESPONSIVE ================= */
+@media (max-width: 768px) {
+
+  .ig-feed {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .ig-post {
+    width: 100%;           /* remove fixed 500px */
+    margin: 0 auto 20px;   /* keep spacing */
+    border-radius: 10px;
+  }
+
+  .ig-media {
+    max-height: 350px;     /* reduce large media height */
+  }
+
+  .ig-actions svg {
+    font-size: 22px;       /* slightly smaller icons */
+  }
+
+  .ig-caption,
+  .ig-comments {
+    font-size: 13px;
+  }
+
+  .ig-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .ig-username {
+    font-size: 13px;
+  }
+
+}
