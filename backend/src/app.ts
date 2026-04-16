@@ -23,17 +23,27 @@ const app: Application = express();
 // ---------------- Middlewares ----------------
 
 // CORS configuration
-const allowedOrigins: string[] = [
-  "http://localhost:3000",
-  "http://localhost:5173",
-];
-if (process.env.FRONTEND_URL) {
-  allowedOrigins.push(process.env.FRONTEND_URL);
-}
-
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:3000",
+        "http://localhost:5173",
+      ];
+      if (process.env.FRONTEND_URL) {
+        allowedOrigins.push(process.env.FRONTEND_URL);
+      }
+      // Allow requests with no origin (mobile apps, curl, etc.)
+      if (!origin) return callback(null, true);
+      // Allow exact match or any Vercel preview URL for the frontend
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app")
+      ) {
+        return callback(null, true);
+      }
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
