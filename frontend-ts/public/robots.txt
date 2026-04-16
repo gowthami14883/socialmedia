@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://socialmedia-swes.vercel.app/sitemap.xml
