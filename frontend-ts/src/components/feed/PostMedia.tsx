@@ -12,7 +12,7 @@ interface PostMediaProps {
 function PostMedia({ post, showHeart }: PostMediaProps) {
   return (
     <div className="post-media">
-      {post?.media?.map((img, index) => (
+      {post?.media?.map((_img, index) => (
         <img
           key={index}
           src={`https://picsum.photos/seed/${post?.id}-${index}/500/500`}
