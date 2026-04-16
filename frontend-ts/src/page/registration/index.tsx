@@ -1,4 +1,4 @@
-import "./Register.css";
+import "./register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
