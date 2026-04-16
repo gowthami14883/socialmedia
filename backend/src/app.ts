@@ -60,5 +60,5 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/chats", chatRoutes);
 
 // Static files (uploads)
-app.use("/uploads", express.static(join(__dirname, "..", "uploads")));
+app.use("/uploads", express.static(join(__dirname, "..", "..", "uploads")));
 export default app;
