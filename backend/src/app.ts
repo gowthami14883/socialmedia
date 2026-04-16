@@ -42,6 +42,15 @@ app.use(
 app.use(express.json());
 
 
+// ---------------- Health Check ----------------
+app.get("/api/health", (_req, res) => {
+  res.json({
+    status: "ok",
+    environment: process.env.RAILWAY_ENVIRONMENT ? "railway" : "local",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // ---------------- Routes ----------------
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
